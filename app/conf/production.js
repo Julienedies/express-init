@@ -3,20 +3,6 @@
  * Created by julien.zhang on 2015/2/27.
  */
 
-GLOBAL.ENVIRONMENT = 'production';
-
-GLOBAL.MYSQL = {
-    host: '122.144.134.3',
-    port: 3306,
-    user: 'website',
-    password: 'N1oEySUOvz',
-    resource: 'ada_cam'
-};
-
-GLOBAL.PORTALMOBILE = "http://m.chinascopefinancial.com.cn/portalmobile";
-
-
-
 
 module.exports = function (app) {
 
