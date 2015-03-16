@@ -1,7 +1,6 @@
 *.log
 .idea/
 map.json
-/static/node_modules/
 /static/publish/
-#/static/bower_components/
-/node_modules
+*bower_components/
+*node_modules
