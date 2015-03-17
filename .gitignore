@@ -1,6 +1,7 @@
 *.log
 .idea/
 map.json
+/log
 /static/publish/
 *bower_components/
 *node_modules

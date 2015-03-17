@@ -3,6 +3,7 @@
  * Created by julien.zhang on 2015/2/27.
  */
 
+GLOBAL.ENVIRONMENT = 'production';
 
 module.exports = function (app) {
 

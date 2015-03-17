@@ -2,9 +2,13 @@
  * 应用启动文件
  * Created by julien.zhang on 2015/2/26.
  */
-
+var http = require('http');
+var https = require('https');
 var express = require('express');
+var socket = require('socket.io');
+var fs = require('fs');
 var app = express();
+
 
 //目录
 var path = require("path");
@@ -19,6 +23,7 @@ GLOBAL.ACTION_DIR = path.join(USER_DIR, './action/');
 GLOBAL.FILTER_DIR = path.join(USER_DIR, './filter/');
 GLOBAL.VIEW_DIR = path.join(USER_DIR, './view/');
 GLOBAL.STATIC_DIR = path.join(USER_DIR, './static/');
+GLOBAL.SITE_DIR = path.join(ROOT_DIR, './site/');
 
 
 //全局配置
@@ -41,7 +46,7 @@ app.set('view engine', 'html');
 app.set('views', VIEW_DIR);
 
 //express 视图缓存
-app.set('view cache', VIEWCACHE);
+app.set('view cache', false);
 //swig 视图缓存
 swig.setDefaults({ cache: false });
 
@@ -58,9 +63,9 @@ app.use(require('cookie-parser')(COOKIESECRET));
 
 //session
 var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
+//var RedisStore = require('connect-redis')(session);
 app.use(session({
-    store: new RedisStore(REDIS),
+    //store: new RedisStore(REDIS),
     secret: SEESSIONSECRET,
     saveUninitialized: false,   // don't create session until something stored,
     resave: false,              // don't save session if unmodified
@@ -83,7 +88,15 @@ app.use('/assets', express.static(ASSETS_DIR));
 require(HELPER_DIR + 'routes.js')(require(CONF_DIR + 'routes.js'), app);
 
 //start
+http.createServer(app).listen(3000, function(){
+});
+https.createServer({
+    key: fs.readFileSync(SITE_DIR + 'server.key', 'utf8'),
+    cert:fs.readFileSync(SITE_DIR + 'server.crt', 'utf8')
+}, app).listen(3001);
+
+/*
 app.listen(app.get('port'), function () {
     LOGGER && LOGGER.getLogger('start').info('m.shukugang.com start on ' + app.get('port') + ' in ' + app.get('env'));
     console.log('m.shukugang.com start on ' + app.get('port') + ' in ' + app.get('env'));
-});
+});*/
