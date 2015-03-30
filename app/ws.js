@@ -8,7 +8,7 @@ var wss = new WebSocketServer({port:3100});
 wss.on('connection', function(ws){
     ws.on('message', function(msg){
         console.log(msg);
-        wss.broadcast(msg);
+        ws.send('收到于'+new Date);
     });
 });
 

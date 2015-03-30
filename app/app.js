@@ -5,7 +5,6 @@
 var http = require('http');
 var https = require('https');
 var express = require('express');
-var socket = require('socket.io');
 var fs = require('fs');
 var app = express();
 
@@ -87,13 +86,38 @@ app.use('/assets', express.static(ASSETS_DIR));
 //应用路由
 require(HELPER_DIR + 'routes.js')(require(CONF_DIR + 'routes.js'), app);
 
-//start
-http.createServer(app).listen(3000, function(){
-});
-https.createServer({
+//http
+var httpServer = http.createServer(app);
+
+//https
+var httpsServer = https.createServer({
     key: fs.readFileSync(SITE_DIR + 'server.key', 'utf8'),
     cert:fs.readFileSync(SITE_DIR + 'server.crt', 'utf8')
-}, app).listen(3001);
+}, app);
+
+
+//socket
+var count = 0;
+var io = require('socket.io')(httpServer);
+io.on('connection', function(socket){
+    console.log('socket connection success.', socket);
+    LOGGER.info(require('util').inspect(socket.request));
+    socket.emit('a', {msg:'ok', time:+new Date});
+    socket.on('b', function(msg){
+        ++count;
+        if(count>100) return;
+        socket.emit('a', {count:count});
+    })
+});
+
+//start
+httpServer.listen(3000, function(){});
+httpsServer.listen(3001);
+
+
+
+
+
 
 /*
 app.listen(app.get('port'), function () {

@@ -70,7 +70,6 @@ module.exports = function(conf, app){
 
         params.unshift(route.url);
 
-        console.log(params[1]);
         //app[route.method || 'all'](route.url, action);
         app[route.method || 'all'].apply(app, params);
 
